@@ -6,15 +6,15 @@ versionCode = "1"
 versionName = "1.0.0"
 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 consumerProguardFiles = "consumer-rules.pro"
-agp = "8.3.0-alpha07"
+agp = "8.1.4"
 kotlin = "1.9.0"
 core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 lifecycle-runtime-ktx = "2.6.2"
-activity-compose = "1.8.0"
-compose-bom = "2023.08.00"
+activity-compose = "1.8.1"
+compose-bom = "2023.10.01"
 
 retrofit = "2.4.0"
 okHttp = "3.10.0"
@@ -36,12 +36,23 @@ flexBoxLayout = "3.0.0"
 dataStore = "1.0.0"
 agentWeb = "v5.0.6-androidx"
 
+hilt = "2.48.1"
+hiltExt = "1.1.0"
+multidexVersion = "2.0.1"
+appCompatVersion = "1.6.1"
+inject = "1"
+lifecycleVmKtxVersion = "2.6.2"
+kotlinxCoroutinesVersion = "1.7.3"
+
 [libraries]
+multidex = {group = "androidx.multidex", name = "multidex", version.ref = "multidexVersion"}
+appCompat = {group = "androidx.appcompat", name = "appcompat", version.ref = "appCompatVersion"}
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+lifecycleVmKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleVmKtxVersion" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
@@ -51,8 +62,18 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
+kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesVersion"}
+
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
+hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+inject = { group = "javax.inject", name = "javax.inject", version.ref = "inject" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+kotlinxSerialization = { id = "kotlinx-serialization", version.ref = "kotlin" }
