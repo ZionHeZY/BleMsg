@@ -2,6 +2,7 @@ package com.hezy.model.gateway
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import com.hezy.model.entity.DeviceType
 import com.hezy.model.entity.Devices
 import kotlinx.coroutines.flow.Flow
 
@@ -15,24 +16,32 @@ interface BluetoothDiscoveryGateway {
      * @return 设备流
      */
     fun startDiscovery(bluetoothAdapter: BluetoothAdapter): Flow<Devices>
-    
+
     /**
      * 停止扫描
      * @param bluetoothAdapter 蓝牙适配器
      */
     suspend fun stopDiscovery(bluetoothAdapter: BluetoothAdapter)
-    
+
     /**
      * 获取已配对设备
      * @param bluetoothAdapter 蓝牙适配器
      * @return 已配对设备列表
      */
     suspend fun getPairedDevices(bluetoothAdapter: BluetoothAdapter): List<Devices>
-    
+
     /**
      * 将BluetoothDevice转换为Devices
      * @param device 蓝牙设备
+     * @param deviceType 设备类型
      * @return Devices对象
      */
-    fun mapToDevices(device: BluetoothDevice): Devices
+    fun mapToDevices(device: BluetoothDevice, deviceType: DeviceType): Devices
+
+    /**
+     * 将BluetoothDevice转换为Devices，使用默认的设备类型（扫描到的设备）
+     * @param device 蓝牙设备
+     * @return Devices对象
+     */
+    fun mapToDevices(device: BluetoothDevice): Devices = mapToDevices(device, DeviceType.SCANNED)
 }

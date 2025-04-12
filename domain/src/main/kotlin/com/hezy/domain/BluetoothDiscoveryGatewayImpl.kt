@@ -40,8 +40,14 @@ class BluetoothDiscoveryGatewayImpl @Inject constructor(
                             @Suppress("DEPRECATION")
                             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                         }
-                        device?.let {
-                            trySend(mapToDevices(it))
+                        try {
+                            device?.let {
+                                val mappedDevice = mapToDevices(it, com.hezy.model.entity.DeviceType.SCANNED)
+                                android.util.Log.d("BluetoothDiscovery", "Found device: ${mappedDevice.deviceName} (${mappedDevice.deviceAddress})")
+                                trySend(mappedDevice)
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("BluetoothDiscovery", "Error sending device: ${e.message}")
                         }
                     }
                 }
@@ -72,17 +78,38 @@ class BluetoothDiscoveryGatewayImpl @Inject constructor(
     @SuppressLint("MissingPermission")
     override suspend fun getPairedDevices(bluetoothAdapter: BluetoothAdapter): List<Devices> {
         return withContext(Dispatchers.IO) {
-            bluetoothAdapter.bondedDevices?.map { device ->
-                mapToDevices(device)
-            } ?: emptyList()
+            try {
+                // 确保返回的列表不包含null值
+                bluetoothAdapter.bondedDevices?.mapNotNull { device ->
+                    try {
+                        // 将已配对设备的类型设置为PAIRED
+                        mapToDevices(device, com.hezy.model.entity.DeviceType.PAIRED)
+                    } catch (e: Exception) {
+                        android.util.Log.e("BluetoothDiscovery", "Error mapping device: ${e.message}")
+                        null
+                    }
+                } ?: emptyList()
+            } catch (e: Exception) {
+                android.util.Log.e("BluetoothDiscovery", "Error getting paired devices: ${e.message}")
+                emptyList()
+            }
         }
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    override fun mapToDevices(device: BluetoothDevice): Devices {
+    override fun mapToDevices(device: BluetoothDevice, deviceType: com.hezy.model.entity.DeviceType): Devices {
+        // 确保设备地址不为空
+        val address = device.address ?: throw IllegalArgumentException("设备地址不能为空")
+
         return Devices(
             deviceName = device.name ?: "未知设备",
-            deviceAddress = device.address
+            deviceAddress = address,
+            deviceType = deviceType
         )
+    }
+
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
+    override fun mapToDevices(device: BluetoothDevice): Devices {
+        return mapToDevices(device, com.hezy.model.entity.DeviceType.SCANNED)
     }
 }

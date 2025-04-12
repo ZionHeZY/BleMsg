@@ -10,7 +10,9 @@ import com.hezy.model.state.ConnectionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class HandleClientGatewayImpl : HandleClientGateway {
+import javax.inject.Inject
+
+class HandleClientGatewayImpl @Inject constructor() : HandleClientGateway {
     @SuppressLint("MissingPermission")
     override suspend fun initClient(
         bluetoothDevice: BluetoothDevice,

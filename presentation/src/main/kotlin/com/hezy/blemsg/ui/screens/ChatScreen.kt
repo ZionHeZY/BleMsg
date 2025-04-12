@@ -1,5 +1,6 @@
 package com.hezy.blemsg.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import com.hezy.blemsg.MainViewModel
 import com.hezy.blemsg.R
 import com.hezy.blemsg.ui.components.MessageBubble
 import com.hezy.model.entity.Devices
+import com.hezy.model.state.BluetoothConnectionState
 import com.hezy.model.state.ProgressBarState
 import kotlinx.coroutines.delay
 
@@ -63,17 +65,32 @@ fun ChatScreen(
         }
     }
 
-    // 模拟接收消息（仅用于演示）
-    // 在实际实现中，这里应该使用ReadMessageUseCase监听消息
+    // 监听蓝牙连接状态
     LaunchedEffect(Unit) {
         // 清空之前的消息
         viewModel.clearMessages()
+    }
 
-        // 模拟收到欢迎消息
-        delay(1000)
-        viewModel.receiveMessage("你好，我是${device.deviceName}！")
-        delay(2000)
-        viewModel.receiveMessage("我们现在已经通过蓝牙连接。")
+    // 监听蓝牙连接状态变化
+    LaunchedEffect(uiState.bluetoothConnectionState) {
+        when (uiState.bluetoothConnectionState) {
+            BluetoothConnectionState.Connected -> {
+                // 连接成功，显示欢迎消息
+                android.util.Log.d("ChatScreen", "蓝牙连接成功")
+                viewModel.receiveMessage("你好，我是${device.deviceName}！")
+                delay(1000)
+                viewModel.receiveMessage("我们现在已经通过蓝牙连接。")
+            }
+            BluetoothConnectionState.None -> {
+                // 连接失败或断开
+                android.util.Log.d("ChatScreen", "蓝牙连接失败或断开")
+                viewModel.receiveMessage("连接失败或断开，请返回重试。")
+            }
+            else -> {
+                // 其他状态
+                android.util.Log.d("ChatScreen", "蓝牙状态: ${uiState.bluetoothConnectionState}")
+            }
+        }
     }
 
     Scaffold(
@@ -102,6 +119,61 @@ fun ChatScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
+                // 连接状态提示
+                when (uiState.bluetoothConnectionState) {
+                    BluetoothConnectionState.Connected -> {
+                        // 连接成功时显示绿色状态栏
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .height(24.dp)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "已连接到 ${device.deviceName}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+                    BluetoothConnectionState.None -> {
+                        // 未连接时显示红色状态栏
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .height(24.dp)
+                                .background(MaterialTheme.colorScheme.errorContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "连接失败或断开",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                        }
+                    }
+                    else -> {
+                        // 连接中显示黄色状态栏
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .height(24.dp)
+                                .background(MaterialTheme.colorScheme.tertiaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "正在连接...",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        }
+                    }
+                }
+
                 // 消息列表
                 LazyColumn(
                     modifier = Modifier

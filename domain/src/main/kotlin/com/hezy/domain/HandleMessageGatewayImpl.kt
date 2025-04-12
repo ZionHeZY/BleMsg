@@ -12,7 +12,9 @@ import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.io.OutputStream
 
-class HandleMessageGatewayImpl : HandleMessageGateway {
+import javax.inject.Inject
+
+class HandleMessageGatewayImpl @Inject constructor() : HandleMessageGateway {
     override fun initTransferMessage(bluetoothSocket: BluetoothSocket): BluetoothData.Data<BluetoothSocket> {
         return BluetoothData.Data(ConnectionState.Inited, bluetoothSocket)
     }

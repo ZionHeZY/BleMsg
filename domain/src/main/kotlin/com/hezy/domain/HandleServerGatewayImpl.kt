@@ -9,7 +9,9 @@ import com.hezy.model.state.ConnectionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class HandleServerGatewayImpl : HandleServerGateway {
+import javax.inject.Inject
+
+class HandleServerGatewayImpl @Inject constructor() : HandleServerGateway {
     @SuppressLint("MissingPermission")
     override suspend fun initServer(
         bluetoothAdapter: BluetoothAdapter,

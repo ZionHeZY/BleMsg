@@ -27,32 +27,35 @@ class DiscoverDevicesUseCase @Inject constructor(
     operator fun invoke(): Flow<BluetoothData<List<Devices>>> {
         return flow {
             emit(BluetoothData.Status(progressBarState = ProgressBarState.Loading))
-            
+
             // 获取已配对设备
             val pairedDevices = bluetoothDiscoveryGateway.getPairedDevices(bluetoothAdapter)
-            emit(BluetoothData.Data(ConnectionState.Inited, pairedDevices))
-            
+            // 确保列表不包含null值
+            val safePairedDevices = pairedDevices.filterNotNull()
+            emit(BluetoothData.Data(ConnectionState.Inited, safePairedDevices))
+
             // 开始扫描新设备
             val discoveredDevices = mutableListOf<Devices>()
-            discoveredDevices.addAll(pairedDevices)
-            
+            discoveredDevices.addAll(safePairedDevices)
+
             bluetoothDiscoveryGateway.startDiscovery(bluetoothAdapter)
-                .onStart { 
+                .onStart {
                     emit(BluetoothData.Status(progressBarState = ProgressBarState.Loading))
                 }
-                .onCompletion { 
+                .onCompletion {
                     emit(BluetoothData.Status(progressBarState = ProgressBarState.Idel))
                 }
                 .map { device ->
-                    if (!discoveredDevices.contains(device)) {
+                    if (device != null && !discoveredDevices.contains(device)) {
                         discoveredDevices.add(device)
                     }
-                    BluetoothData.Data(ConnectionState.Connected, discoveredDevices.toList())
+                    // 确保返回的列表不包含null值
+                    BluetoothData.Data(ConnectionState.Connected, discoveredDevices.filterNotNull())
                 }
                 .collect { emit(it) }
         }
     }
-    
+
     /**
      * 停止扫描
      */

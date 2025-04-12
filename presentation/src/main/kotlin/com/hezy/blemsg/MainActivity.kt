@@ -17,7 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hezy.blemsg.ui.screens.ChatScreen
-import com.hezy.blemsg.ui.screens.DeviceListScreen
+import com.hezy.blemsg.ui.screens.DeviceListScreenSimple
 import com.hezy.blemsg.ui.theme.BleMsgTheme
 import com.hezy.model.entity.Devices
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,10 +53,12 @@ fun BleMsgApp(viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "device_list") {
         // 设备列表屏幕
         composable("device_list") {
-            DeviceListScreen(
+            DeviceListScreenSimple(
                 viewModel = viewModel,
                 onNavigateToChat = { device ->
                     selectedDevice = device
+                    // 先连接设备，然后导航到聊天界面
+                    viewModel.connectToDevice(device)
                     navController.navigate("chat")
                 }
             )
