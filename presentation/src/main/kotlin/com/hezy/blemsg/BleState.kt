@@ -11,7 +11,7 @@ import java.io.OutputStream
 data class BleState(
     val progressBarState: ProgressBarState = ProgressBarState.Idel,
     val bluetoothConnectionState: BluetoothConnectionState = BluetoothConnectionState.None,
-    val messages: ArrayList<Messages> = arrayListOf(),
+    val messages: List<Messages> = emptyList(),
     val inputStream: InputStream = DEFAULT_INPUT_STREAM,
     val outputStream: OutputStream = DEFAULT_OUTPUT_STREAM
 )

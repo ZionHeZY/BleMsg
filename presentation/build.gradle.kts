@@ -54,6 +54,7 @@ android {
 
 dependencies {
     implementation(project(":model"))
+    implementation(project(":domain"))
     implementation(libs.core.ktx)
     implementation(libs.multidex)
     implementation(libs.lifecycleVmKtx)
@@ -66,6 +67,12 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)  // 替换 kapt(libs.hilt.compiler)
+
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.5")
+
+    // Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

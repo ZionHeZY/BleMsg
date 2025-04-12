@@ -1,8 +1,10 @@
 package com.hezy.domain.di
 
+import com.hezy.domain.BluetoothDiscoveryGatewayImpl
 import com.hezy.domain.HandleClientGatewayImpl
 import com.hezy.domain.HandleMessageGatewayImpl
 import com.hezy.domain.HandleServerGatewayImpl
+import com.hezy.model.gateway.BluetoothDiscoveryGateway
 import com.hezy.model.gateway.HandleClientGateway
 import com.hezy.model.gateway.HandleMessageGateway
 import com.hezy.model.gateway.HandleServerGateway
@@ -26,4 +28,8 @@ abstract class DomainBindsModule {
     @Singleton
     @Binds
     abstract fun bindHandleMessage(impl: HandleMessageGatewayImpl): HandleMessageGateway
+
+    @Singleton
+    @Binds
+    abstract fun bindBluetoothDiscovery(impl: BluetoothDiscoveryGatewayImpl): BluetoothDiscoveryGateway
 }

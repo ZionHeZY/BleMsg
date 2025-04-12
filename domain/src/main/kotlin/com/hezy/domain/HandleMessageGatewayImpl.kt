@@ -2,6 +2,7 @@ package com.hezy.domain
 
 import android.bluetooth.BluetoothSocket
 import com.hezy.domain.utils.SocketTools.toCustomString
+import com.hezy.model.Constants
 import com.hezy.model.entity.Messages
 import com.hezy.model.gateway.HandleMessageGateway
 import com.hezy.model.state.BluetoothData
@@ -20,13 +21,13 @@ class HandleMessageGatewayImpl : HandleMessageGateway {
         return try {
             withContext(Dispatchers.IO) {
                 val buffer = ByteArray(1024)
-                val bytes: Int = inputStream.read(buffer) ?: 0
+                val bytes: Int = inputStream.read(buffer)
                 val readMessage = String(buffer, 0, bytes)
                 val milliSecondsTime = System.currentTimeMillis()
                 val message = Messages(
-                    message = readMessage ?: "",
+                    message = readMessage,
                     time = milliSecondsTime,
-                    type = BluetoothConstants.MESSAGE_TYPE_RECEIVED
+                    type = Constants.MESSAGE_TYPE_RECEIVED
                 )
                 BluetoothData.Data(ConnectionState.Connected, message)
             }
@@ -45,9 +46,9 @@ class HandleMessageGatewayImpl : HandleMessageGateway {
                 val msg = buffer.toCustomString()
                 val milliSecondsTime = System.currentTimeMillis()
                 val message = Messages(
-                    message = msg ?: "",
+                    message = msg,
                     time = milliSecondsTime,
-                    type = BluetoothConstants.MESSAGE_TYPE_SENT
+                    type = Constants.MESSAGE_TYPE_SENT
                 )
                 BluetoothData.Data(ConnectionState.Connected, message)
             }
