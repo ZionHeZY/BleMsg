@@ -102,25 +102,6 @@ BleMsg允许用户：
 - **Material Design 3**：UI设计系统
 - **Android蓝牙API**：用于蓝牙功能
 
-## 项目状态
-
-该项目目前正在开发中。核心蓝牙功能已实现，但UI和一些功能仍在开发中。
-
-## 开始使用
-
-### 前提条件
-
-- Android Studio Arctic Fox或更新版本
-- Android SDK 21+
-- Kotlin 1.9.0+
-
-### 构建项目
-
-1. 克隆仓库
-2. 在Android Studio中打开项目
-3. 同步Gradle文件
-4. 在具有蓝牙功能的设备上构建并运行应用
-
 ## 权限
 
 应用需要以下权限：
